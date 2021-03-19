@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="MyApp" packages="">
+    <Properties>
+        <Property name="rollingFileName">logs/app.log</Property>
+        <Property name="rollingFileNamePattern">logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%m%n"/>
+        </Console>
+
+        <Console name="STDOUT_JSON" target="SYSTEM_OUT">
+            <CustomJsonLayout/>
+        </Console>
+
+        <RollingFile name="RollingFile" fileName="${rollingFileName}" filePattern="${rollingFileNamePattern}">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+        </RollingFile>
+
+        <Async name="Async">
+            <AppenderRef ref="STDOUT_JSON"/>
+            <AppenderRef ref="RollingFile"/>
+        </Async>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <!--
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="STDOUT_JSON"/>
+            -->
+            <AppenderRef ref="Async"/>
+        </Root>
+    </Loggers>
+</Configuration>
